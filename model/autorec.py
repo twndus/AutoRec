@@ -3,6 +3,7 @@ autorec.py
 '''
 import torch
 from torch import nn
+from torchsummary import summary
 
 class AutoRec(nn.Module):
 
@@ -13,9 +14,9 @@ class AutoRec(nn.Module):
         self.latent_dim = latent_dim
 
         # parameters
-        self.encoder = nn.Embedding(self.input_dim, self_latent_dim)
-        self.decoder = nn.Embedding(self.latent_dim, self.input_dim)
-        
+        self.encoder = nn.Linear(self.input_dim, self.latent_dim)
+        self.decoder = nn.Linear(self.latent_dim, self.input_dim)
+
         # function
         self.sigmoid = nn.Sigmoid()
 
@@ -25,3 +26,7 @@ class AutoRec(nn.Module):
         x = self.sigmoid(x)
         x = self.decoder(x)
         return self.sigmoid(x)
+
+if __name__ == '__main__':
+    autorec = AutoRec(input_dim=50, latent_dim=10)
+    summary(autorec, (1, 50))
