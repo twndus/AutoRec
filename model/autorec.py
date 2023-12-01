@@ -19,13 +19,19 @@ class AutoRec(nn.Module):
 
         # function
         self.sigmoid = nn.Sigmoid()
+        self.identity = nn.Identity()
 
+    def init_params(self):
+
+        for layer in [self.encoder, self.decoder]:
+            nn.init.kaiming_normal_(layer.weight)
+            nn.init.zeros_(layer.bias)
     
     def forward(self, x):
         x = self.encoder(x)
         x = self.sigmoid(x)
         x = self.decoder(x)
-        return self.sigmoid(x)
+        return self.identity(x)
 
 if __name__ == '__main__':
     autorec = AutoRec(input_dim=50, latent_dim=10)
